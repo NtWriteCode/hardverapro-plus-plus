@@ -1,0 +1,41 @@
+---
+item-re-check-interval: 60                                           # Seconds
+message-re-check-interval: 60                                        # Seconds
+error-notifs: true                                  # Whether to send notifcations about critical errors too
+message-notifs: true                                # Whether to send notifications about private messages as well
+item-notifs: true                                   # Whether to send notifications about listed items
+ntfy:                                               # https://ntfy.sh/
+  token: null                                       # Only needed if you self-host ntfy and use ACL. (Settings -> Account -> Access tokens)
+  url: https://ntfy.sh                              # Base URL if you self-host ntfy
+  default-topic: Hardverapro                        # What topic to use for ntfy if it's not specific for a search-query
+messages:
+  topic: "Hardverapro_messages"
+item-urls:
+  - url: https://hardverapro.hu/aprok/hardver/videokartya/amd_ati           # REQUIRED | Put the URL here, you can either paste the whole URL including the index.php, just make sure the "aprok/.../.../..." is included
+    topic: null                                                             # OPTIONAL | Override topic here if you don't want to put everything in the same bucket
+    text: null                                                              # OPTIONAL | What text to filter for
+    text-exclude: null                                                      # OPTIONAL | Text to exlude from the search
+    county: null                                                            # OPTIONAL | County to narrow down search
+    city: "Debrecen"                                                        # OPTIONAL | City to narrow down search
+    min-price: 1000                                                         # OPTIONAL | Obviously the minimum price
+    max-price: 200000                                                       # OPTIONAL | Obviously the maximum price
+    brand: null                                                             # OPTIONAL | What brands to search
+    buying: 2                                                               # OPTIONAL | Choose 1 to buy something, 0 to sell something and 2 to include both
+    no-iced: 1                                                              # OPTIONAL | Omit "iced" ("Jegelt") items from search
+    search-exact-only: null                                                 # OPTIONAL | Exact search results only
+    search-title-only: null                                                 # OPTIONAL | Exact title results only
+    shipping-only: null                                                     # OPTIONAL | Only include items with shipment option available
+  - url: https://hardverapro.hu/aprok/hardver/processzor/intel/lga_1151_v2/index.html
+    topic: "Hardverapro_CPU"
+    text: "i5"
+    text-exclude: null
+    county: "Budapest"
+    city: null
+    min-price: null                                                         # null means that it's unspecified
+    max-price: null                                                         # null means that it's unspecified
+    brand: null
+    buying: 1
+    no-iced: 1
+    search-exact-only: null
+    search-title-only: null
+    shipping-only: null
