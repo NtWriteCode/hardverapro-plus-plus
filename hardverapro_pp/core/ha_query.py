@@ -15,7 +15,7 @@ class HardveraproQuery:
     def _query_param_from_yml(self, query_key: str, config: Config, config_key: str) -> None:
         config_value = config.key(config_key).str('')
         if config_value:
-            self.query_params[query_key] = config_value
+            self._query_params[query_key] = config_value
 
     def _generate_sesssion(self) -> requests.Session:
         session = requests.session()
@@ -38,12 +38,22 @@ class HardveraproQuery:
                     session.cookies.set(match[0], match[1], domain='hardverapro.hu')
 
         return session
+    
+    @staticmethod
+    def _make_id(url: str):
+        hashlib.sha1(url).hexdigest().lower()
 
-    def __init__(self, config: Config) -> None:
-        self.base_url = self._url_parser(config.key('url').str())
-        self.id = hashlib.sha1(self.base_url.encode()).hexdigest().lower()
-        self.query_params = {}
-        self.session = self._generate_sesssion()
+    def get_id(self) -> str:
+        return self._id
+
+    def __init__(self, config: Config, user_agent: str = None) -> None:
+        self._base_url = self._url_parser(config.key('url').str())
+        self._id = HardveraproQuery._make_id(self._base_url.encode())
+        self._query_params = {}
+        self._session = self._generate_sesssion()
+        
+        if user_agent:
+            self._session.headers.update({'User-Agent': user_agent})
 
         self._query_param_from_yml('stext', config, 'text')
         self._query_param_from_yml('stext_none', config, 'text-exclude')
@@ -60,16 +70,16 @@ class HardveraproQuery:
         config_buying = config.key('buying').int(2)
         match config_buying:
             case 0:
-                self.query_params['buying'] = '0'
+                self._query_params['buying'] = '0'
             case 1:
-                self.query_params['buying'] = '1'
+                self._query_params['buying'] = '1'
             case 2:
-                self.query_params['__buying'] = '1'
+                self._query_params['__buying'] = '1'
             case _:
                 pass
 
-    def send_search_modification_request(self) -> bool:
-        req = self.session.post('https://hardverapro.hu/muvelet/beallitasok/modosit.php?mode=uad&url=/index.html', data={
+    def _send_search_modification_request(self) -> bool:
+        req = self._session.post('https://hardverapro.hu/muvelet/beallitasok/modosit.php?mode=uad&url=/index.html', data={
                                     'order': 'time',
                                     'dir': 'd',
                                     'block': '200'
@@ -77,6 +87,6 @@ class HardveraproQuery:
         return req.status_code == 200
 
     def make_query(self) -> str:
-        self.send_search_modification_request()
-        out = self.session.get(self.base_url, params=self.query_params)
+        self._send_search_modification_request()
+        out = self._session.get(self._base_url, params=self._query_params)
         return out.content.decode('utf-8')

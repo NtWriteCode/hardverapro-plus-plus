@@ -1,13 +1,14 @@
 ---
-item-re-check-interval: 60                                           # Seconds
-message-re-check-interval: 60                                        # Seconds
-error-notifs: true                                  # Whether to send notifcations about critical errors too
-message-notifs: true                                # Whether to send notifications about private messages as well
-item-notifs: true                                   # Whether to send notifications about listed items
-ntfy:                                               # https://ntfy.sh/
-  token: null                                       # Only needed if you self-host ntfy and use ACL. (Settings -> Account -> Access tokens)
-  url: https://ntfy.sh                              # Base URL if you self-host ntfy
-  default-topic: Hardverapro                        # What topic to use for ntfy if it's not specific for a search-query
+item-re-check-interval: 60                                                  # Seconds
+message-re-check-interval: 60                                               # Seconds
+user-agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0"  # Leave it as is if you don't know what it means
+error-notifs: true                                                          # Whether to send notifcations about critical errors too
+message-notifs: true                                                        # Whether to send notifications about private messages as well
+item-notifs: true                                                           # Whether to send notifications about listed items
+ntfy:                                                                       # https://ntfy.sh/
+  token: null                                                               # Only needed if you self-host ntfy and use ACL. (Settings -> Account -> Access tokens)
+  url: https://ntfy.sh                                                      # Base URL if you self-host ntfy
+  default-topic: Hardverapro                                                # What topic to use for ntfy if it's not specific for a search-query
 messages:
   topic: "Hardverapro_messages"
 item-urls:
