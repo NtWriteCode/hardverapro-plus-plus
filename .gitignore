@@ -251,7 +251,7 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/python,visualstudiocode,windows,linux,git
 
 # Custom files, configs
-.vscode/*
 cfg/config.yml
 cfg/session.txt
 db/*
+*.pkl

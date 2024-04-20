@@ -1,6 +1,5 @@
 import os
 import pickle
-from hardverapro_pp.core.ha_query import HardveraproQuery
 from hardverapro_pp.core.ha_item import HardveraproItem
 
 
@@ -11,8 +10,9 @@ class ItemDatabase:
         self._database: list[HardveraproItem] = []
         self._database_newly_created = True
         if os.path.exists(self._database_path):
-            self._database = pickle.load(self._database_path)
-            self._database_newly_created = False
+            with open(self._database_path, 'rb') as db_file:
+                self._database = pickle.load(db_file)
+                self._database_newly_created = False
         else:
             print(f'Created new database for: "{query_id}"')
 
@@ -29,3 +29,15 @@ class ItemDatabase:
     def insert(self, item: HardveraproItem) -> None:
         self._database.append(item)
         self._save_database()
+
+    def __str__(self) -> str:
+        out = f'Database path: {self._database_path}{os.linesep}'
+        out += f'Database new: {self._database_newly_created}{os.linesep}'
+        i = 0
+        for element in self._database:
+            element_str = str(element)
+            out += f'[{i}]:{os.linesep}\t'
+            out += element_str.replace(os.linesep, f'{os.linesep}\t')
+            out += os.linesep
+            i+=1
+        return out

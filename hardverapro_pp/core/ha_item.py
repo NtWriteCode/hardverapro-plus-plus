@@ -1,3 +1,4 @@
+import os
 import hashlib
 
 
@@ -17,3 +18,15 @@ class HardveraproItem():
 
     def __hash__(self) -> int:
         return hash(self.url)
+    
+    def __str__(self) -> str:
+        return (
+            f'Id:\t\t{self.id}{os.linesep}'
+            f'Title:\t\t{self.title}{os.linesep}'
+            f'Price:\t\t{self.price}{os.linesep}'
+            f'Seller:\t\t{self.seller}{os.linesep}'
+            f'S. Repu:\t{self.reputation}{os.linesep}'
+            f'Upload at:\t{self.upload_date}{os.linesep}'
+            f'Url:\t\t{self.url}{os.linesep}'
+            f'Thumbnail:\t{self.thumbnail}{os.linesep}'
+        )
