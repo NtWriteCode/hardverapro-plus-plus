@@ -1,7 +1,7 @@
 import os
 import pickle
-from ha_query import HardveraproQuery
-from ha_item import HardveraproItem
+from hardverapro_pp.core.ha_query import HardveraproQuery
+from hardverapro_pp.core.ha_item import HardveraproItem
 
 
 class ItemDatabase:

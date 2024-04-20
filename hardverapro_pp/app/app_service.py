@@ -1,23 +1,22 @@
-import yaml
 import time
 import schedule
-from notify import Ntfy
-from ha_query import HardveraproQuery
-from ha_item import HardveraproItem
-from ha_parser import HardveraproParser
-from item_database import ItemDatabase
+from hardverapro_pp.utils.config import Config
+from hardverapro_pp.utils.notify import Ntfy
+from hardverapro_pp.core.ha_query import HardveraproQuery
+from hardverapro_pp.core.ha_item import HardveraproItem
+from hardverapro_pp.core.ha_parser import HardveraproParser
+from hardverapro_pp.utils.database import ItemDatabase
 
 
-def get_queries() -> list[tuple[HardveraproQuery, str]]:
+def get_queries(cfg: Config) -> list[tuple[HardveraproQuery, str]]:
     queries = []
-    with open('config.yml', 'r', encoding='utf-8') as file:
-        cfg = yaml.safe_load(file)
-        default_topic = cfg['ntfy']['default-topic']
-        for item in cfg['item-urls']:
-            topic = default_topic
-            if 'topic' in item:
-                topic = item['topic']
-            queries.append((HardveraproQuery(item), topic))
+    default_topic = cfg.key('ntfy').key('default-topic').str()
+    for item in cfg.key('item-urls').list():
+        topic = default_topic
+        specific_topic = item.key('topic').str('')
+        if specific_topic:
+            topic = specific_topic
+        queries.append((HardveraproQuery(item), topic))
 
     return queries
 
@@ -42,15 +41,10 @@ def crawl(queries: list[tuple[HardveraproQuery, str]], ntfy: Ntfy):
                 itemdb.insert(item)
 
 
-def get_schedule_interval():
-    with open('config.yml', 'r', encoding='utf-8') as file:
-        cfg = yaml.safe_load(file)
-        return cfg['re-check']
-
-
-if __name__ == "__main__":
-    interval = get_schedule_interval()
-    queries = get_queries()
+def loop():
+    cfg = Config()
+    interval = cfg.key('item-re-check-interval').int(60)
+    queries = get_queries(cfg)
     ntfy = Ntfy()
 
     schedule.every(interval).seconds.do(crawl, queries=queries, ntfy=ntfy)
