@@ -7,4 +7,4 @@ COPY requirements.txt .
 RUN pip3 install -r requirements.txt
 RUN chmod +x /app/app_cli.py && ln -s /app/app_cli.py /usr/local/bin/ha
 
-CMD ["python3", "/app/app_service.py"]
+CMD ["python3", "-m hardverapro_pp"]
