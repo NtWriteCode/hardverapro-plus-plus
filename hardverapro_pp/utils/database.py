@@ -6,6 +6,7 @@ from hardverapro_pp.core.ha_item import HardveraproItem
 class ItemDatabase:
     def __init__(self, query_id: str) -> None:
         database_folder = os.environ.get('HA_DATABASE_FOLDER', '')
+        self._query_id = query_id
         self._database_path = os.path.join(database_folder, query_id + '.pkl')
         self._database: list[HardveraproItem] = []
         self._database_newly_created = True
@@ -30,8 +31,15 @@ class ItemDatabase:
         self._database.append(item)
         self._save_database()
 
+    def delete(self, id: str) -> bool:
+        old_size = len(self._database)
+        self._database = [obj for obj in self._database if obj.id != id]
+        self._save_database()
+        return len(self._database) < old_size
+
     def __str__(self) -> str:
-        out = f'Database path: {self._database_path}{os.linesep}'
+        out = f'Database Id: {self._query_id}{os.linesep}'
+        out += f'Database path: {self._database_path}{os.linesep}'
         out += f'Database new: {self._database_newly_created}{os.linesep}'
         i = 0
         for element in self._database:

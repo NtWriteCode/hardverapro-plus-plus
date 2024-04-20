@@ -10,7 +10,7 @@
 			"request": "launch",
 			"program": "${workspaceFolder}/cli.py",
 			"console": "integratedTerminal",
-			"args": ["list"]
+			"args": ["delete", "-d", "dca3903bb66eb344a10cf14df8781afd36aa284b"]
 		},
 		{
 			"name": "Python Debugger: HAPP Module",
