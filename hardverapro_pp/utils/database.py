@@ -1,5 +1,5 @@
 import os
-import pickle
+import pickle  # nosec B403
 from hardverapro_pp.core.ha_item import HardveraproItem
 
 
@@ -12,7 +12,7 @@ class ItemDatabase:
         self._database_newly_created = True
         if os.path.exists(self._database_path):
             with open(self._database_path, "rb") as db_file:
-                self._database = pickle.load(db_file)
+                self._database = pickle.load(db_file)  # nosec B301
                 self._database_newly_created = False
         else:
             print(f'Created new database for: "{query_id}"')

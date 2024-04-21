@@ -1,13 +1,18 @@
 ---
 item-re-check-interval: 60                                                  # Seconds
 message-re-check-interval: 60                                               # Seconds
-user-agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 Firefox/125.0"  # Leave it as is if you don't know what it means
 error-notifs: true                                                          # Whether to send notifcations about critical errors too
 message-notifs: true                                                        # Whether to send notifications about private messages as well
 item-notifs: true                                                           # Whether to send notifications about listed items
+network:
+  requests-timeout: 10                                                      # Timeout (in seconds) to wait for response for each query
+  user-agent: >                                                             # Leave it as is if you don't know what it means
+    Mozilla/5.0
+    (Windows NT 10.0; Win64; x64; rv:125.0)
+    Gecko/20100101 Firefox/125.0
 logging:                                                                    # Control config settings
   level: Warning
-  stdout: True
+  stdout: true
   path: null
 ntfy:                                                                       # https://ntfy.sh/
   token: null                                                               # Only needed if you self-host ntfy and use ACL. (Settings -> Account -> Access tokens)
@@ -16,7 +21,8 @@ ntfy:                                                                       # ht
 messages:
   topic: "Hardverapro_messages"
 item-urls:
-  - url: https://hardverapro.hu/aprok/hardver/videokartya/amd_ati           # REQUIRED | Put the URL here, you can either paste the whole URL including the index.php, just make sure the "aprok/.../.../..." is included
+  - url: https://hardverapro.hu/aprok/hardver/videokartya/amd_ati           # REQUIRED | Put the URL here, you can either paste the whole URL including the index.php,
+                                                                            #            just make sure the "aprok/.../.../..." is included
     topic: null                                                             # OPTIONAL | Override topic here if you don't want to put everything in the same bucket
     text: null                                                              # OPTIONAL | What text to filter for
     text-exclude: null                                                      # OPTIONAL | Text to exlude from the search

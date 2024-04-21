@@ -5,9 +5,10 @@ from hardverapro_pp.utils.config import Config
 
 class Ntfy:
     def __init__(self) -> None:
-        cfg = Config()
-        self._access_token = cfg.key("ntfy").key("token").str("")
-        self._base_url = cfg.key("ntfy").key("url").str()
+        config = Config()
+        self._access_token = config.key("ntfy").key("token").str("")
+        self._base_url = config.key("ntfy").key("url").str()
+        self._timeout = config.key("network").key("requests-timeout").int(10)
 
     def push(
         self,
@@ -35,6 +36,6 @@ class Ntfy:
         if icon:
             headers["Icon"] = icon
 
-        push = requests.post(self._base_url + "/" + topic, data=message, headers=headers)
+        push = requests.post(self._base_url + "/" + topic, data=message, headers=headers, timeout=self._timeout)
 
         return push.status_code == 200

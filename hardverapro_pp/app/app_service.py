@@ -13,7 +13,7 @@ from hardverapro_pp.utils.database import ItemDatabase
 def generate_queries(cfg: Config) -> list[tuple[HardveraproQuery, str]]:
     queries = []
     default_topic = cfg.key("ntfy").key("default-topic").str()
-    user_agent = cfg.key("user-agent").str(requests.utils.default_headers()["User-Agent"])
+    user_agent = cfg.key("network").key("user-agent").str(requests.utils.default_headers()["User-Agent"])
     for item in cfg.key("item-urls").list():
         topic = item.key("topic").str(default_topic)
         queries.append((HardveraproQuery(item, user_agent), topic))
@@ -35,10 +35,10 @@ def generate_hapro_item_ntfy(ntfy: Ntfy, item: HardveraproItem, topic: str):
     )
 
 
-def crawl_queries(queries: list[tuple[HardveraproQuery, str]], ntfy: Ntfy):
+def crawl_queries(queries: list[tuple[HardveraproQuery, str]], ntfy: Ntfy, config: Config):
     for query, topic in queries:
         content = query.make_query()
-        parser = HardveraproParser(content)
+        parser = HardveraproParser(config, content)
         items = parser.get_items()
         itemdb = ItemDatabase(query.get_id())
 
@@ -50,13 +50,13 @@ def crawl_queries(queries: list[tuple[HardveraproQuery, str]], ntfy: Ntfy):
 
 
 def loop():
-    log.initialize()
-    cfg = Config()
+    config = Config()
+    log.initialize(None, None, None)
     ntfy = Ntfy()
-    interval = cfg.key("item-re-check-interval").int(60)
-    queries = generate_queries(cfg)
+    interval = config.key("item-re-check-interval").int(60)
+    queries = generate_queries(config)
 
-    schedule.every(interval).seconds.do(crawl_queries, queries=queries, ntfy=ntfy)
+    schedule.every(interval).seconds.do(crawl_queries, queries=queries, ntfy=ntfy, config=config)
     while True:
         schedule.run_pending()
         time.sleep(1)

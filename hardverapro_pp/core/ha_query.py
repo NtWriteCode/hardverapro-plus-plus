@@ -55,6 +55,7 @@ class HardveraproQuery:
         self._id = HardveraproQuery._make_id(self._base_url)
         self._query_params = {}
         self._session = self._generate_sesssion()
+        self._timeout = config.key("network").key("requests-timeout").int(10)
 
         if user_agent:
             self._session.headers.update({"User-Agent": user_agent})
@@ -83,13 +84,10 @@ class HardveraproQuery:
                 pass
 
     def _send_search_modification_request(self) -> bool:
-        req = self._session.post(
-            "https://hardverapro.hu/muvelet/beallitasok/modosit.php?mode=uad&url=/index.html",
-            data={"order": "time", "dir": "d", "block": "200"},
-        )
+        req = self._session.post("https://hardverapro.hu/muvelet/beallitasok/modosit.php?mode=uad&url=/index.html", data={"order": "time", "dir": "d", "block": "200"}, timeout=self._timeout)
         return req.status_code == 200
 
     def make_query(self) -> str:
         self._send_search_modification_request()
-        out = self._session.get(self._base_url, params=self._query_params)
+        out = self._session.get(self._base_url, params=self._query_params, timeout=self._timeout)
         return out.content.decode("utf-8")
