@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Type, TypeVar, Optional
+import logging
 import yaml
 import os
 
@@ -13,13 +14,15 @@ class Config:
 
         self._config = {}
         self._config_name = "root"
+        self._logger = logging.getLogger(__name__)
         config_path = os.environ.get("HA_CONFIG_PATH", "cfg/config.yml")
 
         try:
             with open(config_path, "r", encoding="utf-8") as file:
                 self._config = yaml.safe_load(file.read())
-        except Exception:
-            print(f'Failed to open config file at: "{config_path}"')
+        except Exception as e:
+            self._logger.error(f'Failed to open config file at: "{config_path}"')
+            raise e
 
     def key(self, key: str) -> Config:
         if key not in self._config:
@@ -38,7 +41,7 @@ class Config:
             if default is not None:
                 return default
 
-            print(f'Error, getting config key "{self._config_name}". Conversion couldn\'t be done: {str(e)}')
+            self._logger.error(f'Error, getting config key "{self._config_name}". Conversion couldn\'t be done: {str(e)}')
             raise e
 
     def int(self, default: Optional[int] = None) -> int:
@@ -51,6 +54,8 @@ class Config:
         if not isinstance(self._config, list):
             if default is not None:
                 return default
-            print(f'Error, getting config key "{self._config_name}". Conversion couldn\'t be done from {type(self._config)} to list[]')
+            error_message = f'Error, getting config key "{self._config_name}". Conversion couldn\'t be done from {type(self._config)} to list[]'
+            self._logger.error(error_message)
+            raise Exception(error_message)
 
         return [Config((item, self._config_name)) for item in self._config]

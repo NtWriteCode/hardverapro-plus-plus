@@ -1,11 +1,13 @@
 import os
 import pickle  # nosec B403
+import logging
 from hardverapro_pp.core.ha_item import HardveraproItem
 
 
 class ItemDatabase:
     def __init__(self, query_id: str) -> None:
         database_folder = os.environ.get("HA_DATABASE_FOLDER", "")
+        self._logger = logging.getLogger(__name__)
         self._query_id = query_id
         self._database_path = os.path.join(database_folder, query_id + ".pkl")
         self._database: list[HardveraproItem] = []
@@ -15,7 +17,7 @@ class ItemDatabase:
                 self._database = pickle.load(db_file)  # nosec B301
                 self._database_newly_created = False
         else:
-            print(f'Created new database for: "{query_id}"')
+            self._logger.info(f'Created new database for: "{query_id}"')
 
     def is_new_database(self) -> bool:
         return self._database_newly_created

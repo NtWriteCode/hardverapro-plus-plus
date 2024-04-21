@@ -1,5 +1,6 @@
 import os
 import re
+import logging
 import requests
 import hashlib
 from typing import Optional
@@ -31,7 +32,7 @@ class HardveraproQuery:
                 with open(sessiontext_path) as sess_file:
                     sessiontext_value = sess_file.read()
             except:
-                print(f'Session file was not found as environment value HA_SESSION_VALUE, neither at the path specified: "{sessiontext_path}". Default to guest user.')
+                self._logger.warning(f'Session file was not found as environment value HA_SESSION_VALUE, neither at the path specified: "{sessiontext_path}". Default to guest user.')
 
         if sessiontext_value:
             for header in sessiontext_value.split("-H "):
@@ -51,6 +52,7 @@ class HardveraproQuery:
         return self._id
 
     def __init__(self, config: Config, user_agent: Optional[str] = None) -> None:
+        self._logger = logging.getLogger(__name__)
         self._base_url = self._url_parser(config.key("url").str())
         self._id = HardveraproQuery._make_id(self._base_url)
         self._query_params = {}
