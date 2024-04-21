@@ -5,6 +5,10 @@ user-agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:125.0) Gecko/20100101 
 error-notifs: true                                                          # Whether to send notifcations about critical errors too
 message-notifs: true                                                        # Whether to send notifications about private messages as well
 item-notifs: true                                                           # Whether to send notifications about listed items
+logging:                                                                    # Control config settings
+  level: Warning
+  stdout: True
+  path: null
 ntfy:                                                                       # https://ntfy.sh/
   token: null                                                               # Only needed if you self-host ntfy and use ACL. (Settings -> Account -> Access tokens)
   url: https://ntfy.sh                                                      # Base URL if you self-host ntfy

@@ -5,13 +5,13 @@ from hardverapro_pp.core.ha_item import HardveraproItem
 
 class ItemDatabase:
     def __init__(self, query_id: str) -> None:
-        database_folder = os.environ.get('HA_DATABASE_FOLDER', '')
+        database_folder = os.environ.get("HA_DATABASE_FOLDER", "")
         self._query_id = query_id
-        self._database_path = os.path.join(database_folder, query_id + '.pkl')
+        self._database_path = os.path.join(database_folder, query_id + ".pkl")
         self._database: list[HardveraproItem] = []
         self._database_newly_created = True
         if os.path.exists(self._database_path):
-            with open(self._database_path, 'rb') as db_file:
+            with open(self._database_path, "rb") as db_file:
                 self._database = pickle.load(db_file)
                 self._database_newly_created = False
         else:
@@ -21,7 +21,7 @@ class ItemDatabase:
         return self._database_newly_created
 
     def _save_database(self) -> None:
-        with open(self._database_path, 'wb') as f:
+        with open(self._database_path, "wb") as f:
             pickle.dump(self._database, f)
 
     def exists(self, item: HardveraproItem) -> bool:
@@ -38,14 +38,14 @@ class ItemDatabase:
         return len(self._database) < old_size
 
     def __str__(self) -> str:
-        out = f'Database Id: {self._query_id}{os.linesep}'
-        out += f'Database path: {self._database_path}{os.linesep}'
-        out += f'Database new: {self._database_newly_created}{os.linesep}'
+        out = f"Database Id: {self._query_id}{os.linesep}"
+        out += f"Database path: {self._database_path}{os.linesep}"
+        out += f"Database new: {self._database_newly_created}{os.linesep}"
         i = 0
         for element in self._database:
             element_str = str(element)
-            out += f'[{i}]:{os.linesep}\t'
-            out += element_str.replace(os.linesep, f'{os.linesep}\t')
+            out += f"[{i}]:{os.linesep}\t"
+            out += element_str.replace(os.linesep, f"{os.linesep}\t")
             out += os.linesep
-            i+=1
+            i += 1
         return out
