@@ -1,5 +1,7 @@
-import requests
 from typing import Optional
+
+import requests
+
 from hardverapro_pp.utils.config import Config
 
 

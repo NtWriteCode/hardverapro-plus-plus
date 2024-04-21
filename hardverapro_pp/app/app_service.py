@@ -1,13 +1,15 @@
 import time
-import schedule
+
 import requests
-from hardverapro_pp.utils import log
-from hardverapro_pp.utils.config import Config
-from hardverapro_pp.utils.notify import Ntfy
-from hardverapro_pp.core.ha_query import HardveraproQuery
+import schedule
+
 from hardverapro_pp.core.ha_item import HardveraproItem
 from hardverapro_pp.core.ha_parser import HardveraproParser
+from hardverapro_pp.core.ha_query import HardveraproQuery
+from hardverapro_pp.utils import log
+from hardverapro_pp.utils.config import Config
 from hardverapro_pp.utils.database import ItemDatabase
+from hardverapro_pp.utils.notify import Ntfy
 
 
 def generate_queries(cfg: Config) -> list[tuple[HardveraproQuery, str]]:

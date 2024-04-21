@@ -1,6 +1,7 @@
+import logging
 import os
 import pickle  # nosec B403
-import logging
+
 from hardverapro_pp.core.ha_item import HardveraproItem
 
 

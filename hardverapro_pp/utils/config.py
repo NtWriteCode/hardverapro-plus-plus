@@ -1,8 +1,10 @@
 from __future__ import annotations
-from typing import Type, TypeVar, Optional
+
 import logging
-import yaml
 import os
+from typing import Optional, Type, TypeVar
+
+import yaml
 
 
 class Config:

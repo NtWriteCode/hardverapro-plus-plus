@@ -10,6 +10,7 @@ repos:
     -   id: check-added-large-files
     -   id: check-case-conflict
     -   id: mixed-line-ending
+    -   id: debug-statements
     -   id: requirements-txt-fixer
 -   repo: https://github.com/psf/black
     rev: 24.4.0
@@ -49,3 +50,7 @@ repos:
     rev: 1.7.8
     hooks:
     -   id: bandit
+-   repo: https://github.com/PyCQA/isort
+    rev: 5.13.2
+    hooks:
+    -   id: isort

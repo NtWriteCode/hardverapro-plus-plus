@@ -1,8 +1,9 @@
 #!/usr/local/bin/python3
 
-import os
 import argparse
+import os
 from pathlib import Path
+
 from hardverapro_pp.utils.database import ItemDatabase
 
 
