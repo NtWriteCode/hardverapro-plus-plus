@@ -14,6 +14,6 @@ def initialize(log_level: Optional[str], log_file: Optional[str], log_to_stdout:
 
     logging.basicConfig(filename=file_name, encoding="utf-8", level=level)
 
-    if not log_to_stdout:
+    if log_to_stdout == False:
         logger = logging.getLogger(__name__)
         logger.propagate = False

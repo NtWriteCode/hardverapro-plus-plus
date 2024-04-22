@@ -1,8 +1,4 @@
 beautifulsoup4==4.12.3
-pre-commit==3.7.0
 PyYAML==6.0.1
 requests==2.31.0
 schedule==1.2.1
-types-beautifulsoup4==4.12.0.20240229
-types-PyYAML==6.0.12.20240311
-types-requests==2.31.0.20240406

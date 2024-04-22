@@ -62,7 +62,7 @@ class HardveraproQuery:
         self._timeout = config.key("network").key("requests-timeout").int(10)
 
         if user_agent:
-            self._session.headers.update({"User-Agent": user_agent})
+            self._session.headers.update({"User-Agent": user_agent.strip()})
 
         self._query_param_from_yml("stext", config, "text")
         self._query_param_from_yml("stext_none", config, "text-exclude")
