@@ -255,3 +255,4 @@ cfg/config.yml
 cfg/session.txt
 db/*
 *.pkl
+docker-compose.prod.yml

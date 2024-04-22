@@ -1,7 +1,10 @@
+import logging
+import threading
 import time
 
 import requests
 import schedule
+from flask import Flask, cli
 
 from hardverapro_pp.core.ha_item import HardveraproItem
 from hardverapro_pp.core.ha_parser import HardveraproParser
@@ -10,6 +13,8 @@ from hardverapro_pp.utils import log
 from hardverapro_pp.utils.config import Config
 from hardverapro_pp.utils.database import ItemDatabase
 from hardverapro_pp.utils.notify import Ntfy
+
+app = Flask(__name__)
 
 
 def generate_queries(cfg: Config) -> list[tuple[HardveraproQuery, str]]:
@@ -51,13 +56,27 @@ def crawl_queries(queries: list[tuple[HardveraproQuery, str]], ntfy: Ntfy, confi
                 itemdb.insert(item)
 
 
+@app.route("/")
+def healthcheck():  # dead: disable
+    return "OK", 200
+
+
 def loop():
+    logging.getLogger(__name__).info("Hardverapro++ service initializing...")
+
+    # Flask server for healthcheck
+    logging.getLogger("werkzeug").disabled = True
+    cli.show_server_banner = lambda *_: None
+    threading.Thread(target=lambda: app.run(host="127.0.0.1", port=5001)).start()
+
     config = Config()
-    log.initialize(None, None, None)
+    log.initialize(config)
+
     ntfy = Ntfy()
     interval = config.key("item-re-check-interval").int(60)
     queries = generate_queries(config)
 
+    logging.getLogger(__name__).info(f"HardverApro++ initialized, starting first crawling in {interval} seconds...")
     schedule.every(interval).seconds.do(crawl_queries, queries=queries, ntfy=ntfy, config=config)
     while True:
         schedule.run_pending()

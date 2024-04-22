@@ -17,7 +17,7 @@ class Config:
         self._config = {}
         self._config_name = "root"
         self._logger = logging.getLogger(__name__)
-        config_path = os.environ.get("HA_CONFIG_PATH", "cfg/config.yml")
+        config_path = os.environ.get("HA_CONFIG_FILEPATH", "cfg/config.yml")
 
         try:
             with open(config_path, "r", encoding="utf-8") as file:
@@ -51,6 +51,9 @@ class Config:
 
     def str(self, default: Optional[str] = None) -> str:
         return self._val(str, default)
+
+    def bool(self, default: Optional[bool] = None) -> bool:
+        return self._val(bool, default)
 
     def list(self, default: Optional[list[Config]] = None) -> list[Config]:
         if not isinstance(self._config, list):

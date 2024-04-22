@@ -1,0 +1,16 @@
+---
+services:
+  hardverapropp:
+    image: ntwritecode/hardverapro-plus-plus
+    container_name: hardverapro-plus-plus
+    user: 1000:1000
+    volumes:
+      - /LOCAL/CONFIG/FOLDER:/cfg
+      - /LOCAL/DB/FOLDER:/db
+    environment:
+      - HA_DATABASE_FOLDER=/db
+      - HA_SESSION_FILEPATH=/cfg/session.txt
+      - HA_CONFIG_FILEPATH=/cfg/config.yml
+    # - HA_SESSION_VALUE=[SESSION_STRING]
+    # - HA_LOG_FILEPATH=/db/log.txt
+    restart: unless-stopped

@@ -1,4 +1,5 @@
 pre-commit==3.7.0
 types-beautifulsoup4==4.12.0.20240229
+types-Flask==1.1.6
 types-PyYAML==6.0.12.20240311
 types-requests==2.31.0.20240406

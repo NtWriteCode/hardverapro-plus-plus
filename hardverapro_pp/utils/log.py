@@ -1,19 +1,22 @@
 import logging
+import os
 from typing import Optional
 
+from hardverapro_pp.utils.config import Config
 
-def initialize(log_level: Optional[str], log_file: Optional[str], log_to_stdout: bool) -> None:
-    level = None
-    file_name = None
 
-    if log_level:
-        level = logging.getLevelName(log_level.upper())
+def initialize(config: Config) -> None:
 
-    if log_file:
-        file_name = log_file
+    log_level = config.key("logging").key("level").str("Warning")
+    level = logging.getLevelName(log_level.upper())
+
+    # HA_LOG_FILEPATH
+    file_name: Optional[str] = os.environ.get("HA_LOG_FILEPATH", "")
+    if not file_name:
+        cfg_file_name = config.key("logging").key("path").str("")
+        file_name = cfg_file_name if cfg_file_name else None
 
     logging.basicConfig(filename=file_name, encoding="utf-8", level=level)
 
-    if log_to_stdout == False:
-        logger = logging.getLogger(__name__)
-        logger.propagate = False
+    if config.key("logging").key("stdout").bool(True) is False:
+        logging.getLogger(__name__).propagate = False

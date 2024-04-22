@@ -26,7 +26,7 @@ class HardveraproQuery:
 
     def _generate_sesssion(self) -> requests.Session:
         session = requests.session()
-        sessiontext_path = os.environ.get("HA_SESSION_PATH", "cfg/session.txt")
+        sessiontext_path = os.environ.get("HA_SESSION_FILEPATH", "cfg/session.txt")
         sessiontext_value = os.environ.get("HA_SESSION_VALUE", "")
 
         if not sessiontext_value:
