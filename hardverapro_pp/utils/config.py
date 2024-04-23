@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Optional, Type, TypeVar
+from pathlib import Path
+from typing import Optional, TypeVar
 
 import yaml
 
@@ -15,16 +16,16 @@ class Config:
             return
 
         self._config = {}
-        self._config_name = "root"
+        self._config_name = 'root'
         self._logger = logging.getLogger(__name__)
-        config_path = os.environ.get("HA_CONFIG_FILEPATH", "cfg/config.yml")
+        config_path = os.environ.get('HA_CONFIG_FILEPATH', 'cfg/config.yml')
 
         try:
-            with open(config_path, "r", encoding="utf-8") as file:
+            with Path(config_path).open('r', encoding='utf-8') as file:
                 self._config = yaml.safe_load(file.read())
-        except Exception as e:
-            self._logger.error(f'Failed to open config file at: "{config_path}"')
-            raise e
+        except Exception:
+            self._logger.exception(f'Failed to open config file at: "{config_path}"')
+            raise
 
     def key(self, key: str) -> Config:
         if key not in self._config:
@@ -32,19 +33,20 @@ class Config:
 
         return Config((self._config[key], key))
 
-    T = TypeVar("T")
+    T = TypeVar('T')
 
-    def _val(self, type_value: Type[T], default: Optional[T] = None) -> T:
+    def _val(self, type_value: type[T], default: Optional[T] = None) -> T:
         try:
             if isinstance(self._config, dict) or not self._config:
-                raise TypeError(f"Config is a {type(self._config)}, which is not meant to be converted into {str(type_value)}")
+                message = f'Config is a {type(self._config)}, which is not meant to be converted into {type_value!s}'
+                raise TypeError(message)  # noqa: TRY301 (This lint is not really applicable here and would unnecessary complicate everything)
             return type_value(self._config)
-        except (ValueError, TypeError) as e:
+        except (ValueError, TypeError):
             if default is not None:
                 return default
 
-            self._logger.error(f'Error, getting config key "{self._config_name}". Conversion couldn\'t be done: {str(e)}')
-            raise e
+            self._logger.exception(f'Error, getting config key "{self._config_name}".')
+            raise
 
     def int(self, default: Optional[int] = None) -> int:
         return self._val(int, default)

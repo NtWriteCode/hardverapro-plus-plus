@@ -5,7 +5,7 @@ from typing import Optional
 
 class HardveraproItem:
     @staticmethod
-    def _make_id(url: str):
+    def _make_id(url: str) -> str:
         return hashlib.shake_256(url.encode()).hexdigest(16).lower()
 
     def __init__(
@@ -27,7 +27,7 @@ class HardveraproItem:
         self.reputation = reputation
         self.id = self._make_id(url)
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: object) -> bool:
         return isinstance(other, HardveraproItem) and self.id == other.id
 
     def __hash__(self) -> int:
@@ -35,12 +35,12 @@ class HardveraproItem:
 
     def __str__(self) -> str:
         return (
-            f"Id:\t\t{self.id}{os.linesep}"
-            f"Title:\t\t{self.title}{os.linesep}"
-            f"Price:\t\t{self.price}{os.linesep}"
-            f"Seller:\t\t{self.seller}{os.linesep}"
-            f"S. Repu:\t{self.reputation}{os.linesep}"
-            f"Upload at:\t{self.upload_date}{os.linesep}"
-            f"Url:\t\t{self.url}{os.linesep}"
-            f"Thumbnail:\t{self.thumbnail}{os.linesep}"
+            f'Id:\t\t{self.id}{os.linesep}'
+            f'Title:\t\t{self.title}{os.linesep}'
+            f'Price:\t\t{self.price}{os.linesep}'
+            f'Seller:\t\t{self.seller}{os.linesep}'
+            f'S. Repu:\t{self.reputation}{os.linesep}'
+            f'Upload at:\t{self.upload_date}{os.linesep}'
+            f'Url:\t\t{self.url}{os.linesep}'
+            f'Thumbnail:\t{self.thumbnail}{os.linesep}'
         )

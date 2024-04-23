@@ -1,6 +1,7 @@
 import logging
 import threading
 import time
+from typing import Literal
 
 import requests
 import schedule
@@ -19,22 +20,22 @@ app = Flask(__name__)
 
 def generate_queries(cfg: Config) -> list[tuple[HardveraproQuery, str]]:
     queries = []
-    default_topic = cfg.key("ntfy").key("default-topic").str()
-    user_agent = cfg.key("network").key("user-agent").str(requests.utils.default_headers()["User-Agent"])
-    for item in cfg.key("item-urls").list():
-        topic = item.key("topic").str(default_topic)
+    default_topic = cfg.key('ntfy').key('default-topic').str()
+    user_agent = cfg.key('network').key('user-agent').str(requests.utils.default_headers()['User-Agent'])
+    for item in cfg.key('item-urls').list():
+        topic = item.key('topic').str(default_topic)
         queries.append((HardveraproQuery(item, user_agent), topic))
 
     return queries
 
 
-def generate_hapro_item_ntfy(ntfy: Ntfy, item: HardveraproItem, topic: str):
-    tags = "rotating_light"
-    icon = "https://cdn.rios.hu/design/ha/logo-compact.png"
+def generate_hapro_item_ntfy(ntfy: Ntfy, item: HardveraproItem, topic: str) -> None:
+    tags = 'rotating_light'
+    icon = 'https://cdn.rios.hu/design/ha/logo-compact.png'
     ntfy.push(
         topic,
         item.title,
-        f"Ára: {item.price}, {item.upload_date}-kor új terméket rakott fel {item.seller} ({item.reputation}) tag",
+        f'Ára: {item.price}, {item.upload_date}-kor új terméket rakott fel {item.seller} ({item.reputation}) tag',
         tags,
         item.url,
         item.thumbnail,
@@ -42,7 +43,7 @@ def generate_hapro_item_ntfy(ntfy: Ntfy, item: HardveraproItem, topic: str):
     )
 
 
-def crawl_queries(queries: list[tuple[HardveraproQuery, str]], ntfy: Ntfy, config: Config):
+def crawl_queries(queries: list[tuple[HardveraproQuery, str]], ntfy: Ntfy, config: Config) -> None:
     for query, topic in queries:
         content = query.make_query()
         parser = HardveraproParser(config, content)
@@ -56,27 +57,27 @@ def crawl_queries(queries: list[tuple[HardveraproQuery, str]], ntfy: Ntfy, confi
                 itemdb.insert(item)
 
 
-@app.route("/")
-def healthcheck():  # dead: disable
-    return "OK", 200
+@app.route('/')
+def healthcheck() -> tuple[Literal['OK'], Literal[200]]:
+    return 'OK', 200
 
 
-def loop():
-    logging.getLogger(__name__).info("Hardverapro++ service initializing...")
+def loop() -> None:
+    logging.getLogger(__name__).info('Hardverapro++ service initializing...')
 
     # Flask server for healthcheck
-    logging.getLogger("werkzeug").disabled = True
+    logging.getLogger('werkzeug').disabled = True
     cli.show_server_banner = lambda *_: None
-    threading.Thread(target=lambda: app.run(host="127.0.0.1", port=5001)).start()
+    threading.Thread(target=lambda: app.run(host='127.0.0.1', port=5001)).start()
 
     config = Config()
     log.initialize(config)
 
     ntfy = Ntfy()
-    interval = config.key("item-re-check-interval").int(60)
+    interval = config.key('item-re-check-interval').int(60)
     queries = generate_queries(config)
 
-    logging.getLogger(__name__).info(f"HardverApro++ initialized, starting first crawling in {interval} seconds...")
+    logging.getLogger(__name__).info(f'HardverApro++ initialized, starting first crawling in {interval} seconds...')
     schedule.every(interval).seconds.do(crawl_queries, queries=queries, ntfy=ntfy, config=config)
     while True:
         schedule.run_pending()
