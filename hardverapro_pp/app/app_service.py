@@ -1,7 +1,6 @@
 import logging
 import threading
 import time
-from typing import Literal
 
 import requests
 import schedule
@@ -58,7 +57,7 @@ def crawl_queries(queries: list[tuple[HardveraproQuery, str]], ntfy: Ntfy, confi
 
 
 @app.route('/')
-def healthcheck() -> tuple[Literal['OK'], Literal[200]]:
+def healthcheck() -> tuple[str, int]:
     return 'OK', 200
 
 

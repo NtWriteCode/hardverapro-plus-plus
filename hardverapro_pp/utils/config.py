@@ -40,7 +40,7 @@ class Config:
             if isinstance(self._config, dict) or not self._config:
                 message = f'Config is a {type(self._config)}, which is not meant to be converted into {type_value!s}'
                 raise TypeError(message)  # noqa: TRY301 (This lint is not really applicable here and would unnecessary complicate everything)
-            return type_value(self._config)
+            return type_value(self._config)  # pyright: ignore [reportCallIssue]
         except (ValueError, TypeError):
             if default is not None:
                 return default
