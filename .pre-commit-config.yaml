@@ -26,18 +26,14 @@ repos:
     rev: v1.35.1
     hooks:
     -   id: yamllint
--   repo: https://github.com/IamTheFij/docker-pre-commit
-    rev: v3.0.1
+-   repo: https://github.com/NtWriteCode/docker-pre-commit-universal
+    rev: v4.0.2
     hooks:
     -   id: docker-compose-check
 -   repo: https://github.com/AleksaC/hadolint-py
     rev: v2.12.1-beta
     hooks:
     -   id: hadolint
--   repo: https://github.com/gitleaks/gitleaks
-    rev: v8.18.2
-    hooks:
-    -   id: gitleaks
 -   repo: https://github.com/trufflesecurity/trufflehog
     rev: v3.73.0
     hooks:
